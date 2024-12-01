@@ -1,8 +1,8 @@
-defmodule AdventOfCodeTemplate.TemplateGenerator do
+defmodule AdventOfCode2024.TemplateGenerator do
   def source(day) do
     """
-    defmodule AdventOfCodeTemplate.Day#{day} do
-      alias AdventOfCodeTemplate.Helpers
+    defmodule AdventOfCode2024.Day#{day} do
+      alias AdventOfCode2024.Helpers
 
       def part_a(_lines) do
       end
@@ -25,10 +25,10 @@ defmodule AdventOfCodeTemplate.TemplateGenerator do
 
   def test(day) do
     """
-    defmodule AdventOfCodeTemplate.Day#{day}Test do
+    defmodule AdventOfCode2024.Day#{day}Test do
       use ExUnit.Case, async: true
 
-      alias AdventOfCodeTemplate.Day#{day}
+      alias AdventOfCode2024.Day#{day}
 
       @tag :skip
       test "Day#{day} part A example" do

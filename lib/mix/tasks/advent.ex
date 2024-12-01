@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Advent do
   end
 
   defp run_and_print_day(day) do
-    AdventOfCodeTemplate.Cli.run_day(day)
+    AdventOfCode2024.Cli.run_day(day)
     |> IO.puts()
   end
 end

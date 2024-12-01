@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-advent_of_code_template-*.tar
+advent_of_code_2024-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/

@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Advent.Gen do
   @moduledoc "A custom mix task to generate code for a new day"
   use Mix.Task
 
-  alias AdventOfCodeTemplate.TemplateGenerator
+  alias AdventOfCode2024.TemplateGenerator
 
   @shortdoc "Generate a source and test file for a new day"
   def run(days) do
