@@ -26,7 +26,18 @@ defmodule AdventOfCode2024.Day02 do
     diff >= 1 and diff <= 3 and small_increases?([b | rest])
   end
 
-  def part_b(_lines) do
+  def part_b(lines) do
+    lines
+    |> Enum.map(&Helpers.string_to_int_list/1)
+    |> Enum.count(fn levels -> safe?(levels) or safe_with_removal?(levels) end)
+  end
+
+  defp safe_with_removal?(levels) do
+    size = Enum.count(levels)
+
+    0..(size - 1)
+    |> Stream.map(&List.delete_at(levels, &1))
+    |> Enum.any?(&safe?/1)
   end
 
   def a() do
