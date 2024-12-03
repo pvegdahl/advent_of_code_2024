@@ -1,14 +1,14 @@
 defmodule AdventOfCode2024.Day03 do
   def part_a(text) do
     text
+    |> parse_numbers()
+    |> Enum.map(fn [a, b] -> a * b end)
+    |> Enum.sum()
   end
 
   def parse_numbers(text) do
-    [
-      Regex.run(~r/mul\((\d+),(\d+)\)/, text)
-      |> Enum.drop(1)
-      |> Enum.map(&String.to_integer/1)
-    ]
+    Regex.scan(~r/mul\((\d+),(\d+)\)/, text)
+    |> Enum.map(fn [_full_match | num_strings] -> Enum.map(num_strings, &String.to_integer/1) end)
   end
 
   def part_b(_lines) do

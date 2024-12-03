@@ -18,6 +18,22 @@ defmodule AdventOfCode2024.Day03Test do
     assert AdventOfCode2024.Day03.parse_numbers("mul(2,3)") == [[2, 3]]
   end
 
+  test "parse input with junk" do
+    assert AdventOfCode2024.Day03.parse_numbers("aksjdflasdfjmul(7,11)aksjdflasdfj") == [[7, 11]]
+  end
+
+  test "parse input with multiple muls" do
+    assert AdventOfCode2024.Day03.parse_numbers("mul(1,2),mul(3,4)&mul(5,6)+mul[7,8]") == [[1, 2], [3, 4], [5, 6]]
+  end
+
+  test "parse input across lines" do
+    assert """
+           mul(1,2),mul(3,4)abc
+           other_mul(5,6)other
+           """
+           |> AdventOfCode2024.Day03.parse_numbers() == [[1, 2], [3, 4], [5, 6]]
+  end
+
   @tag :skip
   test "Day03 part B example" do
     assert Day03.part_b(example_input()) == :something_else
