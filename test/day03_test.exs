@@ -14,6 +14,10 @@ defmodule AdventOfCode2024.Day03Test do
     |> String.trim()
   end
 
+  test "parse simple input to numbers" do
+    assert AdventOfCode2024.Day03.parse_numbers("mul(2,3)") == [[2, 3]]
+  end
+
   @tag :skip
   test "Day03 part B example" do
     assert Day03.part_b(example_input()) == :something_else
