@@ -23,13 +23,15 @@ defmodule AdventOfCode2024.Day04 do
   end
 
   def diagonal1(lines) do
-    matrix =
-      lines
-      |> Enum.map(&String.graphemes/1)
-      |> Enum.map(&List.to_tuple/1)
-      |> List.to_tuple()
-
+    matrix = matrix(lines)
     Enum.map(diagonal_starting_points(matrix), &diagonal_at(matrix, &1))
+  end
+
+  defp matrix(lines) do
+    lines
+    |> Enum.map(&String.graphemes/1)
+    |> Enum.map(&List.to_tuple/1)
+    |> List.to_tuple()
   end
 
   defp diagonal_starting_points(matrix) do
@@ -62,7 +64,38 @@ defmodule AdventOfCode2024.Day04 do
     |> diagonal1()
   end
 
-  def part_b(_lines) do
+  def part_b(lines) do
+    matrix = matrix(lines)
+
+    matrix
+    |> part_b_reference_points()
+    |> Enum.count(fn point -> is_x_mas?(matrix, point) end)
+  end
+
+  defp part_b_reference_points(matrix) do
+    max_x = tuple_size(elem(matrix, 0)) - 3
+    max_y = tuple_size(matrix) - 3
+
+    for x <- 0..max_x, y <- 0..max_y, do: {x, y}
+  end
+
+  def is_x_mas?(matrix, point) do
+    diag1 = x_max_diagonal1(matrix, point)
+    diag2 = x_max_diagonal2(matrix, point)
+
+    (diag1 == "MAS" or diag1 == "SAM") and (diag2 == "MAS" or diag2 == "SAM")
+  end
+
+  defp x_max_diagonal1(matrix, {x, y}) do
+    [{x, y}, {x + 1, y + 1}, {x + 2, y + 2}]
+    |> Enum.map(fn point -> tuple_matrix_get(matrix, point) end)
+    |> Enum.join()
+  end
+
+  defp x_max_diagonal2(matrix, {x, y}) do
+    [{x + 2, y}, {x + 1, y + 1}, {x, y + 2}]
+    |> Enum.map(fn point -> tuple_matrix_get(matrix, point) end)
+    |> Enum.join()
   end
 
   def a() do

@@ -41,8 +41,56 @@ defmodule AdventOfCode2024.Day04Test do
     assert Day04.diagonal2(["ABC", "EFG", "HIJ"]) == ["J", "GI", "CFH", "BE", "A"]
   end
 
-  @tag :skip
   test "Day04 part B example" do
-    assert Day04.part_b(example_input()) == :something_else
+    assert Day04.part_b(example_input()) == 9
+  end
+
+  describe "is_x_mas?" do
+    test "orientation 1" do
+      assert {
+               {"M", "X", "M"},
+               {"Y", "A", "Y"},
+               {"S", "Z", "S"}
+             }
+             |> Day04.is_x_mas?({0, 0})
+    end
+
+    test "orientation 2" do
+      assert {
+               {"S", "X", "M"},
+               {"Y", "A", "Y"},
+               {"S", "Z", "M"}
+             }
+             |> Day04.is_x_mas?({0, 0})
+    end
+
+    test "orientation 3" do
+      assert {
+               {"M", "X", "S"},
+               {"Y", "A", "Y"},
+               {"M", "Z", "S"}
+             }
+             |> Day04.is_x_mas?({0, 0})
+    end
+
+    test "orientation 4" do
+      assert {
+               {"S", "X", "S"},
+               {"Y", "A", "Y"},
+               {"M", "Z", "M"}
+             }
+             |> Day04.is_x_mas?({0, 0})
+    end
+
+    test "not at 0, 0" do
+      assert {
+               {"A", "S", "X", "S"},
+               {"A", "S", "X", "S"},
+               {"B", "S", "X", "S"},
+               {"C", "Y", "A", "Y"},
+               {"D", "M", "Z", "M"}
+             }
+             |> Day04.is_x_mas?({1, 2})
+    end
   end
 end
