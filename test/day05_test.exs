@@ -43,6 +43,28 @@ defmodule AdventOfCode2024.Day05Test do
     |> Enum.map(&String.trim/1)
   end
 
+  test "parse_rules/1" do
+    assert Day05.parse_rules(["47|53", "97|13", "97|61", "97|47", "75|29"]) == %{
+             47 => MapSet.new([53]),
+             97 => MapSet.new([13, 61, 47]),
+             75 => MapSet.new([29])
+           }
+  end
+
+  describe "valid_order?/2" do
+    setup do
+      %{rules: %{4 => MapSet.new([5]), 1 => MapSet.new([2, 3, 4]), 0 => MapSet.new([1])}}
+    end
+
+    test "valid", %{rules: rules} do
+      assert Day05.valid_ordering?([0, 1, 2, 4, 5], rules)
+    end
+
+    test "invalid", %{rules: rules} do
+      refute Day05.valid_ordering?([5, 0, 1, 2, 4], rules)
+    end
+  end
+
   @tag :skip
   test "Day05 part B example" do
     assert Day05.part_b(example_input()) == :something_else
