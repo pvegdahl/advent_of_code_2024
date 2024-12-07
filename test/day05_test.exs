@@ -114,8 +114,26 @@ defmodule AdventOfCode2024.Day05Test do
     end
   end
 
-  @tag :skip
   test "Day05 part B example" do
-    assert Day05.part_b(example_input()) == :something_else
+    assert Day05.part_b(example_input()) == 123
+  end
+
+  describe "rules_to_order/1" do
+    test "puts numbers in the right order" do
+      rules = %{
+        10 => MapSet.new([9, 5, 7, 3, 1]),
+        9 => MapSet.new([8, 6, 4, 2]),
+        8 => MapSet.new([7, 5, 3, 1]),
+        7 => MapSet.new([6, 4, 2]),
+        6 => MapSet.new([5, 4, 3, 2, 1]),
+        5 => MapSet.new([4, 2, 1]),
+        4 => MapSet.new([3, 1]),
+        3 => MapSet.new([2]),
+        2 => MapSet.new([1]),
+        1 => MapSet.new([])
+      }
+
+      assert Day05.rules_to_order(rules) == Enum.to_list(10..1//-1)
+    end
   end
 end

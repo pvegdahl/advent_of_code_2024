@@ -26,11 +26,17 @@ defmodule AdventOfCode2024.Day05 do
 
     empty_pairs_for_all_values =
       rule_lines
-      |> Map.values()
-      |> Enum.reduce(&MapSet.union/2)
+      |> flatten_values()
       |> Map.new(&{&1, MapSet.new()})
 
     Map.merge(empty_pairs_for_all_values, rule_lines)
+  end
+
+  defp flatten_values(map) do
+    map
+    |> Map.values()
+    |> Enum.concat()
+    |> Enum.uniq()
   end
 
   def valid_ordering?(page_order, rules) do
@@ -56,7 +62,38 @@ defmodule AdventOfCode2024.Day05 do
     Enum.at(page_order, index)
   end
 
-  def part_b(_lines) do
+  def part_b(lines) do
+    {rules, page_order_lines} = parse_lines(lines)
+    full_ordering = rules_to_order(rules)
+
+    page_order_lines
+    |> Enum.reject(&valid_ordering?(&1, rules))
+    |> Enum.map(&valid_order(&1, full_ordering))
+    |> Enum.map(&middle_number/1)
+    |> Enum.sum()
+  end
+
+  def rules_to_order(rules) when map_size(rules) == 0, do: []
+
+  def rules_to_order(rules) do
+    keys =
+      rules
+      |> Map.keys()
+      |> MapSet.new()
+
+    values =
+      rules
+      |> flatten_values()
+      |> MapSet.new()
+
+    keys_not_in_values = MapSet.difference(keys, values) |> Enum.to_list()
+    pruned_rules = Map.drop(rules, keys_not_in_values)
+
+    keys_not_in_values ++ rules_to_order(pruned_rules)
+  end
+
+  defp valid_order(order, full_ordering) do
+    Enum.filter(full_ordering, &Enum.member?(order, &1))
   end
 
   def a() do
