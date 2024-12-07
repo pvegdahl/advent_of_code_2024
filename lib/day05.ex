@@ -64,36 +64,35 @@ defmodule AdventOfCode2024.Day05 do
 
   def part_b(lines) do
     {rules, page_order_lines} = parse_lines(lines)
-    full_ordering = rules_to_order(rules)
 
     page_order_lines
     |> Enum.reject(&valid_ordering?(&1, rules))
-    |> Enum.map(&valid_order(&1, full_ordering))
+    |> Enum.map(&reorder(&1, rules))
     |> Enum.map(&middle_number/1)
     |> Enum.sum()
   end
 
-  def rules_to_order(rules) when map_size(rules) == 0, do: []
-
-  def rules_to_order(rules) do
-    keys =
-      rules
-      |> Map.keys()
-      |> MapSet.new()
-
-    values =
-      rules
-      |> flatten_values()
-      |> MapSet.new()
-
-    keys_not_in_values = MapSet.difference(keys, values) |> Enum.to_list()
-    pruned_rules = Map.drop(rules, keys_not_in_values)
-
-    keys_not_in_values ++ rules_to_order(pruned_rules)
+  def reorder(order, rules) do
+    order
+    |> Enum.reverse()
+    |> reorder_reversed(rules)
+    |> Enum.reverse()
   end
 
-  defp valid_order(order, full_ordering) do
-    Enum.filter(full_ordering, &Enum.member?(order, &1))
+  defp reorder_reversed([x], _rules), do: [x]
+
+  defp reorder_reversed([head | tail], rules) do
+    problem_numbers = Map.get(rules, head, MapSet.new())
+
+    index = Enum.find_index(tail, &MapSet.member?(problem_numbers, &1))
+
+    if is_nil(index) do
+      [head | reorder_reversed(tail, rules)]
+    else
+      new_head = Enum.at(tail, index)
+      new_tail = List.replace_at(tail, index, head)
+      reorder_reversed([new_head | new_tail], rules)
+    end
   end
 
   def a() do

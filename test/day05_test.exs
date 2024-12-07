@@ -118,7 +118,7 @@ defmodule AdventOfCode2024.Day05Test do
     assert Day05.part_b(example_input()) == 123
   end
 
-  describe "rules_to_order/1" do
+  describe "reorder/2" do
     test "puts numbers in the right order" do
       rules = %{
         10 => MapSet.new([9, 5, 7, 3, 1]),
@@ -133,7 +133,7 @@ defmodule AdventOfCode2024.Day05Test do
         1 => MapSet.new([])
       }
 
-      assert Day05.rules_to_order(rules) == Enum.to_list(10..1//-1)
+      assert Day05.reorder(Enum.to_list(1..10), rules) == Enum.to_list(10..1//-1)
     end
   end
 end
