@@ -1,7 +1,20 @@
 defmodule AdventOfCode2024.Day05 do
   alias AdventOfCode2024.Helpers
 
-  def part_a(_lines) do
+  def part_a(lines) do
+    {rules, page_order_lines} = parse_lines(lines)
+
+    page_order_lines
+    |> Enum.filter(&valid_ordering?(&1, rules))
+    |> Enum.map(&middle_number/1)
+    |> Enum.sum()
+  end
+
+  defp parse_lines(lines) do
+    {rule_lines, ["" | page_order_lines]} = Enum.split_while(lines, fn line -> line != "" end)
+
+    {parse_rules(rule_lines),
+     Enum.map(page_order_lines, fn line -> line |> String.split(",") |> Enum.map(&String.to_integer/1) end)}
   end
 
   def parse_rules(rule_lines) do
@@ -27,6 +40,11 @@ defmodule AdventOfCode2024.Day05 do
     else
       valid_reversed_ordering?(tail, rules)
     end
+  end
+
+  def middle_number(page_order) do
+    index = div(Enum.count(page_order), 2)
+    Enum.at(page_order, index)
   end
 
   def part_b(_lines) do

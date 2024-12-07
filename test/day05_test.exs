@@ -63,6 +63,51 @@ defmodule AdventOfCode2024.Day05Test do
     test "invalid", %{rules: rules} do
       refute Day05.valid_ordering?([5, 0, 1, 2, 4], rules)
     end
+
+    test "example lines" do
+      rules =
+        Day05.parse_rules([
+          "47|53",
+          "97|13",
+          "97|61",
+          "97|47",
+          "75|29",
+          "61|13",
+          "75|53",
+          "29|13",
+          "97|29",
+          "53|29",
+          "61|53",
+          "97|53",
+          "61|29",
+          "47|13",
+          "75|47",
+          "97|75",
+          "47|61",
+          "75|61",
+          "47|29",
+          "75|13",
+          "53|13"
+        ])
+
+      assert Day05.valid_ordering?([75, 47, 61, 53, 29], rules)
+      assert Day05.valid_ordering?([97, 61, 53, 29, 13], rules)
+      assert Day05.valid_ordering?([75, 29, 13], rules)
+      refute Day05.valid_ordering?([75, 97, 47, 61, 53], rules)
+      refute Day05.valid_ordering?([61, 13, 29], rules)
+      refute Day05.valid_ordering?([97, 13, 75, 29, 47], rules)
+    end
+  end
+
+  describe "middle_number/1" do
+    test "examples" do
+      assert Day05.middle_number([75, 47, 61, 53, 29]) == 61
+      assert Day05.middle_number([97, 61, 53, 29, 13]) == 53
+      assert Day05.middle_number([75, 29, 13]) == 29
+      assert Day05.middle_number([75, 97, 47, 61, 53]) == 47
+      assert Day05.middle_number([61, 13, 29]) == 13
+      assert Day05.middle_number([97, 13, 75, 29, 47]) == 75
+    end
   end
 
   @tag :skip
