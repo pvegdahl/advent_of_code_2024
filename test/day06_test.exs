@@ -26,9 +26,9 @@ defmodule AdventOfCode2024.Day06Test do
   end
 
   describe "parse_input/1" do
-    test "creates a starting_location, boxes tuple" do
+    test "creates a starting_location, boxes, dimensions tuple" do
       assert Day06.parse_input(example_input()) ==
-               {{4, 6},
+               {{4, 6, :north},
                 MapSet.new([
                   {4, 0},
                   {9, 1},
@@ -38,7 +38,7 @@ defmodule AdventOfCode2024.Day06Test do
                   {8, 7},
                   {0, 8},
                   {6, 9}
-                ])}
+                ]), {10, 10}}
     end
   end
 
