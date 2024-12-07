@@ -18,10 +18,19 @@ defmodule AdventOfCode2024.Day05 do
   end
 
   def parse_rules(rule_lines) do
-    rule_lines
-    |> Enum.map(fn rule_line -> rule_line |> String.split("|") |> Enum.map(&String.to_integer/1) end)
-    |> Enum.group_by(&List.first/1, &List.last/1)
-    |> Map.new(fn {key, value} -> {key, MapSet.new(value)} end)
+    rule_lines =
+      rule_lines
+      |> Enum.map(fn rule_line -> rule_line |> String.split("|") |> Enum.map(&String.to_integer/1) end)
+      |> Enum.group_by(&List.first/1, &List.last/1)
+      |> Map.new(fn {key, value} -> {key, MapSet.new(value)} end)
+
+    empty_pairs_for_all_values =
+      rule_lines
+      |> Map.values()
+      |> Enum.reduce(&MapSet.union/2)
+      |> Map.new(&{&1, MapSet.new()})
+
+    Map.merge(empty_pairs_for_all_values, rule_lines)
   end
 
   def valid_ordering?(page_order, rules) do

@@ -47,7 +47,11 @@ defmodule AdventOfCode2024.Day05Test do
     assert Day05.parse_rules(["47|53", "97|13", "97|61", "97|47", "75|29"]) == %{
              47 => MapSet.new([53]),
              97 => MapSet.new([13, 61, 47]),
-             75 => MapSet.new([29])
+             75 => MapSet.new([29]),
+             53 => MapSet.new(),
+             13 => MapSet.new(),
+             61 => MapSet.new(),
+             29 => MapSet.new()
            }
   end
 
