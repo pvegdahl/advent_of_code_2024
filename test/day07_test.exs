@@ -38,6 +38,20 @@ defmodule AdventOfCode2024.Day07Test do
     end
   end
 
+  describe "can_do?/3" do
+    test "Simple, possible input" do
+      assert Day07.can_do?(190, [10, 19], [:+, :*])
+    end
+
+    test "Harder, possible input" do
+      assert Day07.can_do?(292, [11, 6, 16, 20], [:+, :*])
+    end
+
+    test "impossible input" do
+      refute Day07.can_do?(21037, [9, 7, 18, 13], [:+, :*])
+    end
+  end
+
   @tag :skip
   test "Day07 part B example" do
     assert Day07.part_b(example_input()) == :something_else
