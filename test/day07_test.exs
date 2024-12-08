@@ -24,6 +24,20 @@ defmodule AdventOfCode2024.Day07Test do
     |> Enum.map(&String.trim/1)
   end
 
+  describe "parse_input/1" do
+    test "single line" do
+      assert Day07.parse_input(["123: 1 2 3"]) == [{123, [1, 2, 3]}]
+    end
+
+    test "multiple_lines" do
+      assert Day07.parse_input(["190: 10 19", "3267: 81 40 27", "83: 17 5"]) == [
+               {190, [10, 19]},
+               {3267, [81, 40, 27]},
+               {83, [17, 5]}
+             ]
+    end
+  end
+
   @tag :skip
   test "Day07 part B example" do
     assert Day07.part_b(example_input()) == :something_else
