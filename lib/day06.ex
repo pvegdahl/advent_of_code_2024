@@ -11,29 +11,10 @@ defmodule AdventOfCode2024.Day06 do
   end
 
   def parse_input(lines) do
-    boxes =
-      lines
-      |> Enum.with_index()
-      |> Enum.flat_map(fn {line, y_index} -> boxes_in_line(line, y_index) end)
-      |> MapSet.new()
+    %{"^" => start_locations, "#" => boxes} = Helpers.parse_string_grid(lines)
 
-    {start_location(lines), boxes, dimensions(lines)}
-  end
-
-  defp boxes_in_line(line, y_index) do
-    ~r/#/
-    |> Regex.scan(line, return: :index)
-    |> Enum.map(fn [{x_index, _}] -> {x_index, y_index} end)
-  end
-
-  defp start_location(lines) do
-    y_index = Enum.find_index(lines, &String.contains?(&1, "^"))
-
-    line = Enum.at(lines, y_index)
-
-    [[{x_index, _}]] = Regex.scan(~r/\^/, line, return: :index)
-
-    {x_index, y_index, :north}
+    {x, y} = Enum.at(start_locations, 0)
+    {{x, y, :north}, boxes, dimensions(lines)}
   end
 
   defp dimensions(lines) do
