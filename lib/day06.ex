@@ -74,7 +74,45 @@ defmodule AdventOfCode2024.Day06 do
 
   defp in_bounds?({x, y, _direction}, {x_dim, y_dim}), do: x >= 0 and x < x_dim and y >= 0 and y < y_dim
 
-  def part_b(_lines) do
+  def part_b(lines) do
+    {start, boxes, dimensions} = parse_input(lines)
+
+    candidate_boxes = candidate_boxes(start, boxes, dimensions)
+    num_candidates = MapSet.size(candidate_boxes)
+    num_processes = System.schedulers_online()
+    chunk_size = ceil(num_candidates / num_processes)
+
+    candidate_boxes
+    |> Enum.chunk_every(chunk_size)
+    |> Task.async_stream(fn candidates -> count_loops(start, boxes, dimensions, candidates) end, timeout: :infinity)
+    |> Enum.map(fn {:ok, num} -> num end)
+    |> Enum.sum()
+  end
+
+  defp candidate_boxes({start_x, start_y, _direction}, boxes, {x_dim, y_dim}) do
+    all_points = for x <- 0..(x_dim - 1), y <- 0..(y_dim - 1), into: MapSet.new(), do: {x, y}
+
+    all_points
+    |> MapSet.difference(boxes)
+    |> MapSet.delete({start_x, start_y})
+  end
+
+  defp count_loops(start, boxes, dimensions, candidate_boxes) do
+    starting_points = MapSet.new([start])
+
+    candidate_boxes
+    |> Enum.map(&MapSet.put(boxes, &1))
+    |> Enum.count(&loop?(start, starting_points, &1, dimensions))
+  end
+
+  defp loop?(current, points, boxes, dimensions) do
+    next = next_step(current, boxes)
+
+    cond do
+      MapSet.member?(points, next) -> true
+      in_bounds?(next, dimensions) -> loop?(next, MapSet.put(points, next), boxes, dimensions)
+      true -> false
+    end
   end
 
   def a() do
