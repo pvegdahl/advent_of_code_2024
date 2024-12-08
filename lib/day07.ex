@@ -1,10 +1,12 @@
 defmodule AdventOfCode2024.Day07 do
   alias AdventOfCode2024.Helpers
 
-  def part_a(lines) do
+  def part_a(lines), do: do_it_all(lines, [:+, :*])
+
+  defp do_it_all(lines, operators) do
     lines
     |> parse_input()
-    |> Enum.filter(fn {target, numbers} -> can_do?(target, numbers, [:+, :*]) end)
+    |> Enum.filter(fn {target, numbers} -> can_do?(target, numbers, operators) end)
     |> Enum.map(fn {target, _numbers} -> target end)
     |> Enum.sum()
   end
@@ -40,9 +42,9 @@ defmodule AdventOfCode2024.Day07 do
 
   defp apply_operator(a, b, :+), do: a + b
   defp apply_operator(a, b, :*), do: a * b
+  defp apply_operator(a, b, :||), do: (Integer.to_string(a) <> Integer.to_string(b)) |> String.to_integer()
 
-  def part_b(_lines) do
-  end
+  def part_b(lines), do: do_it_all(lines, [:+, :*, :||])
 
   def a() do
     Helpers.file_to_lines!("inputs/day07.txt")

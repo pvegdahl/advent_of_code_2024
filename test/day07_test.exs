@@ -50,10 +50,17 @@ defmodule AdventOfCode2024.Day07Test do
     test "impossible input" do
       refute Day07.can_do?(21037, [9, 7, 18, 13], [:+, :*])
     end
+
+    test "possible with concat operator" do
+      assert Day07.can_do?(7290, [6, 8, 6, 15], [:+, :*, :||])
+    end
+
+    test "still impossible with concat operator" do
+      refute Day07.can_do?(21037, [9, 7, 18, 13], [:+, :*, :||])
+    end
   end
 
-  @tag :skip
   test "Day07 part B example" do
-    assert Day07.part_b(example_input()) == :something_else
+    assert Day07.part_b(example_input()) == 11387
   end
 end
