@@ -36,4 +36,6 @@ defmodule AdventOfCode2024.Helpers do
     x = lines |> List.first() |> String.length()
     {x, y}
   end
+
+  def in_bounds?({x, y}, {x_dim, y_dim}), do: x >= 0 and x < x_dim and y >= 0 and y < y_dim
 end
