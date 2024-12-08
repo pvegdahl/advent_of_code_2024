@@ -21,4 +21,18 @@ defmodule AdventOfCode2024.HelpersTest do
              6 => [0]
            }
   end
+
+  describe "parse_string_grid" do
+    test "empty grid" do
+      assert Helpers.parse_string_grid(["...", "...", "..."]) == %{}
+    end
+
+    test "non-empty grid" do
+      assert Helpers.parse_string_grid(["a.b", ".a.", "bca"]) == %{
+               "a" => MapSet.new([{0, 0}, {1, 1}, {2, 2}]),
+               "b" => MapSet.new([{2, 0}, {0, 2}]),
+               "c" => MapSet.new([{1, 2}])
+             }
+    end
+  end
 end
