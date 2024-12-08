@@ -30,4 +30,10 @@ defmodule AdventOfCode2024.Helpers do
     |> Regex.scan(line, return: :index)
     |> Enum.map(fn [{x_index, _}] -> {String.at(line, x_index), x_index, y_index} end)
   end
+
+  def grid_dimensions(lines) do
+    y = Enum.count(lines)
+    x = lines |> List.first() |> String.length()
+    {x, y}
+  end
 end

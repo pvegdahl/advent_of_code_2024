@@ -35,4 +35,14 @@ defmodule AdventOfCode2024.HelpersTest do
              }
     end
   end
+
+  describe "grid_dimensions" do
+    test "square grid" do
+      assert Helpers.grid_dimensions(["a.b", ".a.", "bca"]) == {3, 3}
+    end
+
+    test "rectangle grid" do
+      assert Helpers.grid_dimensions(["a.", "..", "bc", ".."]) == {2, 4}
+    end
+  end
 end

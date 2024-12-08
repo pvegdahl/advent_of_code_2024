@@ -14,13 +14,7 @@ defmodule AdventOfCode2024.Day06 do
     %{"^" => start_locations, "#" => boxes} = Helpers.parse_string_grid(lines)
 
     {x, y} = Enum.at(start_locations, 0)
-    {{x, y, :north}, boxes, dimensions(lines)}
-  end
-
-  defp dimensions(lines) do
-    y = Enum.count(lines)
-    x = lines |> List.first() |> String.length()
-    {x, y}
+    {{x, y, :north}, boxes, Helpers.grid_dimensions(lines)}
   end
 
   defp walk([head | _] = points, boxes, dimensions) do
