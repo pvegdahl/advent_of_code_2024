@@ -45,4 +45,30 @@ defmodule AdventOfCode2024.HelpersTest do
       assert Helpers.grid_dimensions(["a.", "..", "bc", ".."]) == {2, 4}
     end
   end
+
+  describe "in_bounds?/2" do
+    test "yes in bounds on the late edge" do
+      assert Helpers.in_bounds?({2, 3}, {3, 4})
+    end
+
+    test "yes in bounds on the early edge" do
+      assert Helpers.in_bounds?({0, 0}, {3, 4})
+    end
+
+    test "not in bounds negative x" do
+      refute Helpers.in_bounds?({-1, 1}, {3, 4})
+    end
+
+    test "not in bounds negative y" do
+      refute Helpers.in_bounds?({1, -1}, {3, 4})
+    end
+
+    test "not in bounds x just too large" do
+      refute Helpers.in_bounds?({3, 2}, {3, 4})
+    end
+
+    test "not in bounds y just too large" do
+      refute Helpers.in_bounds?({2, 4}, {3, 4})
+    end
+  end
 end
