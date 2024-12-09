@@ -49,6 +49,25 @@ defmodule AdventOfCode2024.Day09 do
   def part_b([_line]) do
   end
 
+  def setup_queue_b(line) do
+    num_pairs =
+      line
+      |> String.codepoints()
+      |> Enum.map(&String.to_integer/1)
+      |> Enum.chunk_every(2, 2, [0])
+      |> Enum.with_index()
+
+    Enum.reduce(num_pairs, :queue.new(), fn {[file_size, empty_size], file_id}, q0 ->
+      q1 = :queue.in({file_id, file_size}, q0)
+
+      if empty_size > 0 do
+        :queue.in({nil, empty_size}, q1)
+      else
+        q1
+      end
+    end)
+  end
+
   def a() do
     Helpers.file_to_lines!("inputs/day09.txt")
     |> part_a()
