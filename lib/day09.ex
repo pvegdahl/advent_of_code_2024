@@ -1,7 +1,35 @@
 defmodule AdventOfCode2024.Day09 do
   alias AdventOfCode2024.Helpers
 
-  def part_a(_line) do
+  def part_a([line]) do
+    line
+    |> compact()
+    |> Enum.with_index()
+    |> Enum.map(fn {file_id, index} -> file_id * index end)
+    |> Enum.sum()
+  end
+
+  def compact(line) do
+    line
+    |> setup_queue()
+    |> compact([])
+    |> Enum.reverse()
+  end
+
+  defp compact(q0, acc) do
+    case :queue.out(q0) do
+      {:empty, _q} -> acc
+      {{:value, nil}, q1} -> move_from_end(q1, acc)
+      {{:value, value}, q1} -> compact(q1, [value | acc])
+    end
+  end
+
+  defp move_from_end(q0, acc) do
+    case :queue.out_r(q0) do
+      {:empty, _q} -> acc
+      {{:value, nil}, q1} -> move_from_end(q1, acc)
+      {{:value, value}, q1} -> compact(q1, [value | acc])
+    end
   end
 
   def setup_queue(line) do
@@ -18,7 +46,7 @@ defmodule AdventOfCode2024.Day09 do
     end)
   end
 
-  def part_b(_line) do
+  def part_b([_line]) do
   end
 
   def a() do

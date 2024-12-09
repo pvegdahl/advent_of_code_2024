@@ -29,6 +29,16 @@ defmodule AdventOfCode2024.Day09Test do
     end
   end
 
+  describe "compact/1" do
+    test "Nothing to compact" do
+      assert Day09.compact("10203") == [0, 1, 1, 2, 2, 2]
+    end
+
+    test "Compacting to do" do
+      assert Day09.compact("12213") == [0, 2, 2, 1, 1, 2]
+    end
+  end
+
   defp example_input() do
     "2333133121414131402"
     |> String.trim()
