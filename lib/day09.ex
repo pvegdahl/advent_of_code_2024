@@ -41,10 +41,12 @@ defmodule AdventOfCode2024.Day09 do
       |> Enum.with_index()
 
     Enum.reduce(num_pairs, :queue.new(), fn {[file_size, empty_size], file_id}, q ->
-      (List.duplicate(file_id, file_size) ++ List.duplicate(nil, empty_size))
-      |> Enum.reduce(q, fn item, qq -> :queue.in(item, qq) end)
+      items = List.duplicate(file_id, file_size) ++ List.duplicate(nil, empty_size)
+      push_many(q, items)
     end)
   end
+
+  defp push_many(queue, items), do: Enum.reduce(items, queue, fn item, qq -> :queue.in(item, qq) end)
 
   def part_b([_line]) do
   end
@@ -57,13 +59,11 @@ defmodule AdventOfCode2024.Day09 do
       |> Enum.chunk_every(2, 2, [0])
       |> Enum.with_index()
 
-    Enum.reduce(num_pairs, :queue.new(), fn {[file_size, empty_size], file_id}, q0 ->
-      q1 = :queue.in({file_id, file_size}, q0)
-
+    Enum.reduce(num_pairs, :queue.new(), fn {[file_size, empty_size], file_id}, q ->
       if empty_size > 0 do
-        :queue.in({nil, empty_size}, q1)
+        push_many(q, [{file_id, file_size}, {nil, empty_size}])
       else
-        q1
+        :queue.in({file_id, file_size}, q)
       end
     end)
   end
