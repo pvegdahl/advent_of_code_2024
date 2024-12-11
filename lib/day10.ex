@@ -43,7 +43,38 @@ defmodule AdventOfCode2024.Day10 do
     |> Enum.filter(&Helpers.in_bounds?(&1, dimensions))
   end
 
-  def part_b(_lines) do
+  def part_b(lines) do
+    grid = parse_grid(lines)
+    dimensions = Helpers.grid_dimensions(lines)
+
+    grid
+    |> Map.get(0)
+    |> all_all_paths(grid, dimensions)
+    |> Map.values()
+    |> Enum.sum()
+  end
+
+  defp all_all_paths(start_locations, grid, dimensions) do
+    start_locations_with_count = Enum.map(start_locations, &{&1, 1})
+
+    Enum.reduce(1..9, start_locations_with_count, fn next_value, locations_with_counts ->
+      next_steps_with_count(locations_with_counts, next_value, grid, dimensions)
+    end)
+  end
+
+  defp next_steps_with_count(location_counts, next_value, grid, dimensions) do
+    location_counts
+    |> Enum.map(fn {location, count} -> one_next_steps_with_count(location, count, next_value, grid, dimensions) end)
+    |> Enum.reduce(fn map1, map2 -> Map.merge(map1, map2, fn _k, v1, v2 -> v1 + v2 end) end)
+  end
+
+  defp one_next_steps_with_count(location, count, next_value, grid, dimensions) do
+    candidates = neighbors(location, dimensions) |> MapSet.new()
+
+    viable = Map.get(grid, next_value)
+
+    MapSet.intersection(candidates, viable)
+    |> Map.new(&{&1, count})
   end
 
   def a() do
