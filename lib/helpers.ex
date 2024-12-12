@@ -38,4 +38,8 @@ defmodule AdventOfCode2024.Helpers do
   end
 
   def in_bounds?({x, y}, {x_dim, y_dim}), do: x >= 0 and x < x_dim and y >= 0 and y < y_dim
+
+  def merge_maps_with_sum(maps) do
+    Enum.reduce(maps, fn map1, map2 -> Map.merge(map1, map2, fn _k, v1, v2 -> v1 + v2 end) end)
+  end
 end
