@@ -4,9 +4,13 @@ defmodule AdventOfCode2024.Day11 do
   require Integer
 
   def part_a([line]) do
+    do_it_all(line, 25)
+  end
+
+  defp do_it_all(line, n) do
     line
     |> parse_input()
-    |> n_steps(25)
+    |> n_steps(n)
     |> Map.values()
     |> Enum.sum()
   end
@@ -49,7 +53,8 @@ defmodule AdventOfCode2024.Day11 do
     end
   end
 
-  def part_b(_lines) do
+  def part_b([line]) do
+    do_it_all(line, 75)
   end
 
   def a() do
