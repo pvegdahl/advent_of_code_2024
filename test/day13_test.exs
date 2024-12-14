@@ -30,6 +30,17 @@ defmodule AdventOfCode2024.Day13Test do
     |> Enum.map(&String.trim/1)
   end
 
+  describe "parse_input" do
+    test "example_input" do
+      assert [
+               %{a: {94, 34}, b: {22, 67}, prize: {8400, 5400}},
+               %{a: {26, 66}, b: {67, 21}, prize: {12748, 12176}},
+               _,
+               _
+             ] = Day13.parse_input(example_input())
+    end
+  end
+
   @tag :skip
   test "Day13 part B example" do
     assert Day13.part_b(example_input()) == :something_else
