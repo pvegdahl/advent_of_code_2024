@@ -1,7 +1,13 @@
 defmodule AdventOfCode2024.Day13 do
   alias AdventOfCode2024.Helpers
 
-  def part_a(_lines) do
+  def part_a(lines) do
+    lines
+    |> parse_input()
+    |> Enum.map(&solve_ab/1)
+    |> Enum.reject(&(&1 == :impossible))
+    |> Enum.map(&cost/1)
+    |> Enum.sum()
   end
 
   def parse_input(lines) do
@@ -44,7 +50,20 @@ defmodule AdventOfCode2024.Day13 do
     x == prize_x and y == prize_y
   end
 
-  def part_b(_lines) do
+  defp cost({a, b}), do: 3 * a + b
+
+  defp add_1e13_to_prize_location(%{prize: {prize_x, prize_y}} = claw_setup) do
+    %{claw_setup | prize: {prize_x + 10_000_000_000_000, prize_y + 10_000_000_000_000}}
+  end
+
+  def part_b(lines) do
+    lines
+    |> parse_input()
+    |> Enum.map(&add_1e13_to_prize_location/1)
+    |> Enum.map(&solve_ab/1)
+    |> Enum.reject(&(&1 == :impossible))
+    |> Enum.map(&cost/1)
+    |> Enum.sum()
   end
 
   def a() do

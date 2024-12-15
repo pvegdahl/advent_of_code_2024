@@ -59,8 +59,21 @@ defmodule AdventOfCode2024.Day13Test do
     end
   end
 
-  @tag :skip
-  test "Day13 part B example" do
-    assert Day13.part_b(example_input()) == :something_else
+  describe "solve_ab part_b" do
+    test "Example 1 is impossible" do
+      assert Day13.solve_ab(%{a: {94, 34}, b: {22, 67}, prize: {10_000_000_008_400, 10_000_000_005_400}}) == :impossible
+    end
+
+    test "Example 2 is solvable" do
+      refute Day13.solve_ab(%{a: {26, 66}, b: {67, 21}, prize: {10_000_000_012_748, 10_000_000_012_176}}) == :impossible
+    end
+
+    test "Example 3 is impossible" do
+      assert Day13.solve_ab(%{a: {17, 86}, b: {84, 37}, prize: {10_000_000_007_870, 10_000_000_006_450}}) == :impossible
+    end
+
+    test "Example 4 is solvable" do
+      refute Day13.solve_ab(%{a: {69, 23}, b: {27, 71}, prize: {10_000_000_018_641, 10_000_000_010_279}}) == :impossible
+    end
   end
 end
