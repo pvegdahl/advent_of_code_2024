@@ -53,6 +53,29 @@ defmodule AdventOfCode2024.Day14 do
   def part_b(lines, dimensions) do
     lines
     |> parse_input()
+    |> iterations_until_christmas_tree(dimensions, 0)
+  end
+
+  # I'll admit, I kind of cheated here. I got a hint online that the state with the Christmas tree contains no duplicate
+  # locations. I didn't want to look through thousands of images, so I just used that.
+  #
+  # My initial attempt was based on a theory that the Christmas tree would connect all points. That turned out to be
+  # wrong, but did leave me with a nice helper.
+  defp iterations_until_christmas_tree(state, dimensions, iteration_number) do
+    if duplicates?(state) do
+      state
+      |> move(dimensions, 1)
+      |> iterations_until_christmas_tree(dimensions, iteration_number + 1)
+    else
+      iteration_number
+    end
+  end
+
+  defp duplicates?(state) do
+    state
+    |> Enum.map(& &1.location)
+    |> Enum.frequencies()
+    |> Enum.any?(fn {_key, value} -> value > 1 end)
   end
 
   def a() do
