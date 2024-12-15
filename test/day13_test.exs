@@ -35,9 +35,27 @@ defmodule AdventOfCode2024.Day13Test do
       assert [
                %{a: {94, 34}, b: {22, 67}, prize: {8400, 5400}},
                %{a: {26, 66}, b: {67, 21}, prize: {12748, 12176}},
-               _,
-               _
+               %{a: {17, 86}, b: {84, 37}, prize: {7870, 6450}},
+               %{a: {69, 23}, b: {27, 71}, prize: {18641, 10279}}
              ] = Day13.parse_input(example_input())
+    end
+  end
+
+  describe "solve_ab" do
+    test "Example 1 is solvable" do
+      assert Day13.solve_ab(%{a: {94, 34}, b: {22, 67}, prize: {8400, 5400}}) == {80, 40}
+    end
+
+    test "Example 2 is impossible" do
+      assert Day13.solve_ab(%{a: {26, 66}, b: {67, 21}, prize: {12748, 12176}}) == :impossible
+    end
+
+    test "Example 3 is solvable" do
+      assert Day13.solve_ab(%{a: {17, 86}, b: {84, 37}, prize: {7870, 6450}}) == {38, 86}
+    end
+
+    test "Example 4 is impossible" do
+      assert Day13.solve_ab(%{a: {69, 23}, b: {27, 71}, prize: {18641, 10279}}) == :impossible
     end
   end
 

@@ -26,6 +26,24 @@ defmodule AdventOfCode2024.Day13 do
     |> List.to_tuple()
   end
 
+  def solve_ab(%{a: {ax, ay}, b: {bx, by}, prize: {prize_x, prize_y}} = claw_setup) do
+    a = div(by * prize_x - bx * prize_y, by * ax - bx * ay)
+    b = div(prize_y - ay * a, by)
+
+    if valid_solution?({a, b}, claw_setup) do
+      {a, b}
+    else
+      :impossible
+    end
+  end
+
+  defp valid_solution?({a, b}, %{a: {ax, ay}, b: {bx, by}, prize: {prize_x, prize_y}}) do
+    x = ax * a + bx * b
+    y = ay * a + by * b
+
+    x == prize_x and y == prize_y
+  end
+
   def part_b(_lines) do
   end
 
