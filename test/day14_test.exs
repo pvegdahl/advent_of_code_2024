@@ -47,7 +47,10 @@ defmodule AdventOfCode2024.Day14Test do
                ],
                {11, 7},
                1
-             ) == [{3, 1}, {5, 0}]
+             ) == [
+               %{location: {3, 1}, velocity: {3, -3}},
+               %{location: {5, 0}, velocity: {-1, -3}}
+             ]
     end
 
     test "two points, 10 iterations to cause wrapping" do
@@ -58,12 +61,12 @@ defmodule AdventOfCode2024.Day14Test do
                ],
                {11, 7},
                10
-             ) == [{8, 2}, {7, 1}]
+             ) == [
+               %{location: {8, 2}, velocity: {3, -3}},
+               %{location: {7, 1}, velocity: {-1, -3}}
+             ]
     end
   end
 
-  @tag :skip
-  test "Day14 part B example" do
-    assert Day14.part_b(example_input()) == :something_else
-  end
+  # No part B test
 end

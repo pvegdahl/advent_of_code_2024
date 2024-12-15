@@ -6,6 +6,7 @@ defmodule AdventOfCode2024.Day14 do
       lines
       |> parse_input()
       |> move(dimensions, 100)
+      |> Enum.map(& &1.location)
 
     dimensions
     |> quadrants()
@@ -26,8 +27,9 @@ defmodule AdventOfCode2024.Day14 do
   end
 
   def move(location_velocity_pairs, {x_dim, y_dim}, n) do
-    Enum.map(location_velocity_pairs, fn %{location: {x, y}, velocity: {vx, vy}} ->
-      {Integer.mod(x + n * vx, x_dim), Integer.mod(y + n * vy, y_dim)}
+    Enum.map(location_velocity_pairs, fn %{location: {x, y}, velocity: {vx, vy}} = pair ->
+      new_location = {Integer.mod(x + n * vx, x_dim), Integer.mod(y + n * vy, y_dim)}
+      %{pair | location: new_location}
     end)
   end
 
