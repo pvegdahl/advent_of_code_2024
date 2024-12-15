@@ -73,7 +73,7 @@ defmodule AdventOfCode2024.Helpers do
     point_grouping(new_remaining_points, new_points_in_group, new_candidates)
   end
 
-  defp candidate_neighbors({x, y}) do
+  def candidate_neighbors({x, y}) do
     MapSet.new([{x - 1, y}, {x + 1, y}, {x, y - 1}, {x, y + 1}])
   end
 end
