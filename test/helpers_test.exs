@@ -71,4 +71,15 @@ defmodule AdventOfCode2024.HelpersTest do
       refute Helpers.in_bounds?({2, 4}, {3, 4})
     end
   end
+
+  describe "point_groupings" do
+    test "Simple, easy case" do
+      assert Helpers.point_groupings(MapSet.new([{1, 1}, {1, 2}])) == [MapSet.new([{1, 1}, {1, 2}])]
+    end
+
+    test "Three groups. Diagonals not in the same group" do
+      assert Helpers.point_groupings(MapSet.new([{1, 1}, {2, 1}, {4, 4}, {5, 4}, {6, 3}])) |> Enum.sort() ==
+               [MapSet.new([{1, 1}, {2, 1}]), MapSet.new([{4, 4}, {5, 4}]), MapSet.new([{6, 3}])] |> Enum.sort()
+    end
+  end
 end

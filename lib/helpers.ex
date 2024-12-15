@@ -42,4 +42,38 @@ defmodule AdventOfCode2024.Helpers do
   def merge_maps_with_sum(maps) do
     Enum.reduce(maps, fn map1, map2 -> Map.merge(map1, map2, fn _k, v1, v2 -> v1 + v2 end) end)
   end
+
+  def point_groupings(points) do
+    point = Enum.at(points, 0)
+    other_points = MapSet.delete(points, point)
+
+    {points_in_group, remaining_points} = point_grouping(other_points, MapSet.new([point]), [point])
+
+    if Enum.empty?(remaining_points) do
+      [points_in_group]
+    else
+      [points_in_group | point_groupings(remaining_points)]
+    end
+  end
+
+  defp point_grouping(remaining_points, points_in_group, [] = _candidate_points) do
+    {points_in_group, remaining_points}
+  end
+
+  defp point_grouping(remaining_points, points_in_group, [head_candidate | tail_candidates] = _candidate_points) do
+    neighbors =
+      head_candidate
+      |> candidate_neighbors()
+      |> MapSet.intersection(remaining_points)
+
+    new_remaining_points = MapSet.difference(remaining_points, neighbors)
+    new_points_in_group = MapSet.union(points_in_group, neighbors)
+    new_candidates = Enum.to_list(neighbors) ++ tail_candidates
+
+    point_grouping(new_remaining_points, new_points_in_group, new_candidates)
+  end
+
+  defp candidate_neighbors({x, y}) do
+    MapSet.new([{x - 1, y}, {x + 1, y}, {x, y - 1}, {x, y + 1}])
+  end
 end
