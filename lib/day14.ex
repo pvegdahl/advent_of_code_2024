@@ -33,14 +33,6 @@ defmodule AdventOfCode2024.Day14 do
     end)
   end
 
-  def part_b(_lines) do
-  end
-
-  def a() do
-    Helpers.file_to_lines!("inputs/day14.txt")
-    |> part_a({101, 103})
-  end
-
   defp points_in_ranges(points, {x_range, y_range}) do
     Enum.filter(points, fn {x, y} -> x in x_range and y in y_range end)
   end
@@ -58,8 +50,18 @@ defmodule AdventOfCode2024.Day14 do
     [{x0, y0}, {x1, y0}, {x0, y1}, {x1, y1}]
   end
 
+  def part_b(lines, dimensions) do
+    lines
+    |> parse_input()
+  end
+
+  def a() do
+    Helpers.file_to_lines!("inputs/day14.txt")
+    |> part_a({101, 103})
+  end
+
   def b() do
     Helpers.file_to_lines!("inputs/day14.txt")
-    |> part_b()
+    |> part_b({101, 103})
   end
 end
