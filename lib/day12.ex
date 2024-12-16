@@ -32,6 +32,9 @@ defmodule AdventOfCode2024.Day12 do
   def part_b(_lines) do
   end
 
+  def count_sides(_points) do
+  end
+
   def a() do
     Helpers.file_to_lines!("inputs/day12.txt")
     |> part_a()
