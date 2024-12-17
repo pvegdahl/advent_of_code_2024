@@ -29,10 +29,37 @@ defmodule AdventOfCode2024.Day12 do
     end
   end
 
-  def part_b(_lines) do
+  def part_b(lines) do
+    lines
+    |> Helpers.parse_string_grid()
+    |> Enum.flat_map(fn {_letter, points} -> Helpers.point_groupings(points) end)
+    |> Enum.map(&score_point_group_b/1)
+    |> Enum.sum()
   end
 
-  def count_sides(_points) do
+  def score_point_group_b(points) do
+    area = MapSet.size(points)
+    sides = count_sides(points)
+
+    area * sides
+  end
+
+  def count_sides(points) do
+    [{1, 0}, {0, 1}, {-1, 0}, {0, -1}]
+    |> Enum.map(fn direction -> count_one_side(points, direction) end)
+    |> Enum.sum()
+  end
+
+  defp count_one_side(points, direction) do
+    points
+    |> Enum.reject(fn point -> has_neighbor?(point, points, direction) end)
+    |> MapSet.new()
+    |> Helpers.point_groupings()
+    |> Enum.count()
+  end
+
+  defp has_neighbor?({x, y} = _point, points, {dx, dy} = _direction) do
+    MapSet.member?(points, {x + dx, y + dy})
   end
 
   def a() do
