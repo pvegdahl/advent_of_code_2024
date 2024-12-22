@@ -58,7 +58,7 @@ defmodule AdventOfCode2024.Day22Test do
   end
 
   test "Day22 part B example" do
-    assert Day22.part_b(["1", "2", "3", "2024"], 1) == 23
+    assert Day22.part_b(["1", "2", "3", "2024"]) == 23
   end
 
   describe "change_sequence" do

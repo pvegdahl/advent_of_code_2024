@@ -34,27 +34,27 @@ defmodule AdventOfCode2024.Day22 do
 
   defp prune(num), do: Integer.mod(num, 16_777_216)
 
-  def part_b(lines, threshold) do
+  def part_b(lines) do
     change_sequences =
       lines
       |> Enum.map(&String.to_integer/1)
       |> Enum.map(&change_sequence(&1, 2000))
 
-    bid_sequences = likely_bid_sequences(change_sequences, threshold)
+    bid_sequences = ordered_bid_sequences(change_sequences)
 
-    chunk_size = Enum.count(bid_sequences) |> div(11)
-
-    bid_sequences
-    |> Enum.chunk_every(chunk_size)
-    |> Task.async_stream(fn chunk -> one_chunk(change_sequences, chunk) end, timeout: :infinity)
-    |> Enum.map(fn {:ok, result} -> result end)
-    |> Enum.max()
+    find_best_score(change_sequences, bid_sequences)
   end
 
-  defp one_chunk(change_sequences, bid_sequence_chunk) do
-    bid_sequence_chunk
-    |> Enum.map(&score_one_bid(change_sequences, &1))
-    |> Enum.max()
+  defp find_best_score(change_sequences, bid_sequences) do
+    Enum.reduce_while(bid_sequences, 0, fn {bid_sequence, frequency}, best_score ->
+      max_possible_score = frequency * 9
+
+      if best_score > max_possible_score do
+        {:halt, best_score}
+      else
+        {:cont, max(best_score, score_one_bid(change_sequences, bid_sequence))}
+      end
+    end)
   end
 
   def change_sequence(secret_number, n) do
@@ -72,14 +72,13 @@ defmodule AdventOfCode2024.Day22 do
     |> Enum.sum()
   end
 
-  defp likely_bid_sequences(change_sequences, threshold) do
-    # There are ~40k unique sequences in the 2K lists. A number of them show up > 300 times. Most show up less than 200.
-    # Let's focus on the likely ones that show up at least <threshold> times.
+  defp ordered_bid_sequences(change_sequences) do
+    # Order by frequency descending. If a sequence shows up N times, then the largest possible score is
+    # N * 9. Once we dip below that threshold, no need to keep trying sequences.
     change_sequences
     |> Enum.flat_map(&bid_sequences_for_one_list/1)
     |> Enum.frequencies()
-    |> Enum.reject(fn {_key, value} -> value < threshold end)
-    |> Enum.map(fn {key, _value} -> key end)
+    |> Enum.sort_by(fn {_key, value} -> value end, :desc)
   end
 
   defp bid_sequences_for_one_list(change_sequence) do
@@ -100,6 +99,6 @@ defmodule AdventOfCode2024.Day22 do
 
   def b() do
     Helpers.file_to_lines!("inputs/day22.txt")
-    |> part_b(200)
+    |> part_b()
   end
 end
