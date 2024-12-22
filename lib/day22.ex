@@ -40,19 +40,29 @@ defmodule AdventOfCode2024.Day22 do
       |> Enum.map(&String.to_integer/1)
       |> Enum.map(&change_sequence(&1, 2000))
 
-    bid_sequences = ordered_bid_sequences(change_sequences)
+    bid_sequences_by_list = bid_sequences_for_all_lists(change_sequences)
+    bid_sequences = bid_sequences_sorted_by_frequency(bid_sequences_by_list)
 
-    find_best_score(change_sequences, bid_sequences)
+    find_best_score(bid_sequences_by_list, bid_sequences)
   end
 
-  defp find_best_score(change_sequences, bid_sequences) do
+  defp bid_sequences_sorted_by_frequency(bid_sequences_by_list) do
+    bid_sequences_by_list
+    |> Enum.flat_map(&Map.keys/1)
+    |> Enum.frequencies()
+    |> Enum.sort_by(fn {_key, value} -> value end, :desc)
+  end
+
+  defp find_best_score(bid_sequences_by_list, bid_sequences) do
+    # Bid sequences are ordered by descending frequency. # If a sequence shows up N times, then the largest possible
+    # score is N * 9. Once we dip below that threshold, no need to keep trying sequences.
     Enum.reduce_while(bid_sequences, 0, fn {bid_sequence, frequency}, best_score ->
       max_possible_score = frequency * 9
 
       if best_score > max_possible_score do
         {:halt, best_score}
       else
-        {:cont, max(best_score, score_one_bid(change_sequences, bid_sequence))}
+        {:cont, max(best_score, score_one_bid(bid_sequences_by_list, bid_sequence))}
       end
     end)
   end
@@ -66,26 +76,22 @@ defmodule AdventOfCode2024.Day22 do
     |> Enum.take(n)
   end
 
-  def score_one_bid(change_sequences, bid_sequence) do
-    change_sequences
-    |> Enum.map(&bid(&1, bid_sequence))
+  def score_one_bid(bid_sequences_by_list, bid_sequence) do
+    bid_sequences_by_list
+    |> Enum.map(&Map.get(&1, bid_sequence, 0))
     |> Enum.sum()
   end
 
-  defp ordered_bid_sequences(change_sequences) do
-    # Order by frequency descending. If a sequence shows up N times, then the largest possible score is
-    # N * 9. Once we dip below that threshold, no need to keep trying sequences.
-    change_sequences
-    |> Enum.flat_map(&bid_sequences_for_one_list/1)
-    |> Enum.frequencies()
-    |> Enum.sort_by(fn {_key, value} -> value end, :desc)
+  defp bid_sequences_for_all_lists(change_sequences) do
+    Enum.map(change_sequences, &bid_sequences_for_one_list/1)
   end
 
   defp bid_sequences_for_one_list(change_sequence) do
     change_sequence
-    |> Enum.map(&elem(&1, 1))
     |> Enum.chunk_every(4, 1, :discard)
-    |> Enum.uniq()
+    |> Enum.map(fn [{_, a}, {_, b}, {_, c}, {value, d}] -> {{a, b, c, d}, value} end)
+    |> Enum.uniq_by(fn {key, _value} -> key end)
+    |> Map.new()
   end
 
   def bid([_, _, _], _bid_sequence), do: 0

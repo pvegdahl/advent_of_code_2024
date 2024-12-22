@@ -103,11 +103,4 @@ defmodule AdventOfCode2024.Day22Test do
       assert Day22.bid(change_sequence, [-2, 1, -1, 3]) == 9
     end
   end
-
-  describe "score_one_bid" do
-    test "AoC example" do
-      change_sequences = Enum.map([1, 2, 3, 2024], &Day22.change_sequence(&1, 2000))
-      assert Day22.score_one_bid(change_sequences, [-2, 1, -1, 3]) == 23
-    end
-  end
 end
