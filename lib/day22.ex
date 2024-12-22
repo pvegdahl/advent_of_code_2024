@@ -1,8 +1,15 @@
 defmodule AdventOfCode2024.Day22 do
   alias AdventOfCode2024.Helpers
 
-  def part_a(_lines) do
-    -1
+  def part_a(lines) do
+    lines
+    |> Enum.map(&String.to_integer/1)
+    |> Enum.map(fn num -> n_iterations(num, 2000) end)
+    |> Enum.sum()
+  end
+
+  def n_iterations(secret_number, n) do
+    Enum.reduce(1..n, secret_number, fn _, secret_number -> one_iteration(secret_number) end)
   end
 
   def one_iteration(secret_number_0) do

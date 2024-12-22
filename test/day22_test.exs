@@ -19,6 +19,24 @@ defmodule AdventOfCode2024.Day22Test do
     |> Enum.map(&String.trim/1)
   end
 
+  describe "n_iterations" do
+    test "1 x 2000" do
+      assert Day22.n_iterations(1, 2000) == 8_685_429
+    end
+
+    test "10 x 2000" do
+      assert Day22.n_iterations(10, 2000) == 4_700_978
+    end
+
+    test "100 x 2000" do
+      assert Day22.n_iterations(100, 2000) == 15_273_692
+    end
+
+    test "2024 x 2000" do
+      assert Day22.n_iterations(2024, 2000) == 8_667_524
+    end
+  end
+
   describe "one_iteration" do
     test "The examples" do
       [
