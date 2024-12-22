@@ -34,8 +34,40 @@ defmodule AdventOfCode2024.Day22 do
 
   defp prune(num), do: Integer.mod(num, 16_777_216)
 
-  def part_b(_lines) do
-    -1
+  def part_b(lines) do
+    lines
+    |> Enum.map(&String.to_integer/1)
+    |> Enum.map(&change_sequence(&1, 2000))
+    |> try_everything()
+  end
+
+  def change_sequence(secret_number, n) do
+    secret_number
+    |> Stream.iterate(&one_iteration/1)
+    |> Stream.map(&Integer.mod(&1, 10))
+    |> Stream.chunk_every(2, 1)
+    |> Stream.map(fn [previous, current] -> {current, current - previous} end)
+    |> Enum.take(n)
+  end
+
+  def score_one_bid(change_sequences, bid_sequence) do
+    change_sequences
+    |> Enum.map(&bid(&1, bid_sequence))
+    |> Enum.sum()
+  end
+
+  defp all_bid_sequences do
+    for a <- -9..9, b <- -9..9, c <- -9..9, d <- -9..9, do: [a, b, c, d]
+  end
+
+  def bid([_, _, _], _bid_sequence), do: 0
+  def bid([{_, a}, {_, b}, {_, c}, {bananas, d} | _], [a, b, c, d]), do: bananas
+  def bid([_head | tail], bid_sequence), do: bid(tail, bid_sequence)
+
+  defp try_everything(change_sequences) do
+    all_bid_sequences()
+    |> Enum.map(&score_one_bid(change_sequences, &1))
+    |> Enum.max()
   end
 
   def a() do

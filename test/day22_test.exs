@@ -57,8 +57,57 @@ defmodule AdventOfCode2024.Day22Test do
     end
   end
 
-  @tag :skip
   test "Day22 part B example" do
-    assert Day22.part_b(example_input()) == 42
+    assert Day22.part_b(["1", "2", "3", "2024"]) == 23
+  end
+
+  describe "change_sequence" do
+    test "123" do
+      assert Day22.change_sequence(123, 9) == [
+               {0, -3},
+               {6, 6},
+               {5, -1},
+               {4, -1},
+               {4, 0},
+               {6, 2},
+               {4, -2},
+               {4, 0},
+               {2, -2}
+             ]
+    end
+  end
+
+  describe "bid/2" do
+    test "123 example" do
+      change_sequence = Day22.change_sequence(123, 10)
+      assert Day22.bid(change_sequence, [-1, -1, 0, 2]) == 6
+    end
+
+    test "1 example" do
+      change_sequence = Day22.change_sequence(1, 2000)
+      assert Day22.bid(change_sequence, [-2, 1, -1, 3]) == 7
+    end
+
+    test "2 example" do
+      change_sequence = Day22.change_sequence(2, 2000)
+      assert Day22.bid(change_sequence, [-2, 1, -1, 3]) == 7
+    end
+
+    test "3 example" do
+      change_sequence = Day22.change_sequence(3, 2000)
+      assert Day22.bid(change_sequence, [-2, 1, -1, 3]) == 0
+    end
+
+    test "2024 example" do
+      change_sequence = Day22.change_sequence(2024, 2000)
+      assert Day22.bid(change_sequence, [-2, 1, -1, 3]) == 9
+    end
+  end
+
+  describe "score_one_bid" do
+    test "AoC example" do
+      change_sequences = Enum.map([1, 2, 3, 2024], &Day22.change_sequence(&1, 2000))
+      assert Day22.score_one_bid(change_sequences, [-2, 1, -1, 3]) == 23
+    end
   end
 end
