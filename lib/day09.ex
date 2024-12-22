@@ -49,6 +49,7 @@ defmodule AdventOfCode2024.Day09 do
   defp push_many(queue, items), do: Enum.reduce(items, queue, fn item, qq -> :queue.in(item, qq) end)
 
   def part_b([_line]) do
+    -1
   end
 
   def setup_queue_b(line) do

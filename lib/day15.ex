@@ -76,6 +76,7 @@ defmodule AdventOfCode2024.Day15 do
   end
 
   def part_b(_lines) do
+    -1
   end
 
   def a() do

@@ -33,7 +33,8 @@ defmodule AdventOfCode2024.Day06 do
     if MapSet.member?(boxes, candidate_point) do
       {x, y, rotate(direction)}
     else
-      Tuple.append(candidate_point, direction)
+      {candidate_x, candidate_y} = candidate_point
+      {candidate_x, candidate_y, direction}
     end
   end
 

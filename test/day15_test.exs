@@ -96,6 +96,6 @@ defmodule AdventOfCode2024.Day15Test do
 
   @tag :skip
   test "Day15 part B example" do
-    assert Day15.part_b(example_input()) == :something_else
+    assert Day15.part_b(example_input()) == 9021
   end
 end
