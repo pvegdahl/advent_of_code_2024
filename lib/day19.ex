@@ -4,11 +4,15 @@ defmodule AdventOfCode2024.Day19 do
   def part_a(lines) do
     {towels, targets} = parse_input(lines)
 
-    max_towel_index = towels |> Enum.map(&String.length/1) |> Enum.max() |> then(&(&1 - 1))
+    {:ok, cache} = init_cache()
 
-    targets
-    |> Enum.filter(fn target -> possible?(target, MapSet.new(towels), max_towel_index) end)
-    |> Enum.count()
+    result =
+      targets
+      |> Enum.filter(fn target -> possible?(target, towels, cache) end)
+      |> Enum.count()
+
+    Agent.stop(cache)
+    result
   end
 
   def parse_input([towel_line, "" | rest]) do
@@ -20,21 +24,37 @@ defmodule AdventOfCode2024.Day19 do
     {towels, rest}
   end
 
-  def possible?("", _towels, _max_towel_size), do: true
+  def possible?("", _towels, _cache), do: true
 
-  def possible?(target, towels, max_towel_index) do
-    towels
-    |> possible_towels(target, max_towel_index)
-    |> Enum.any?(fn towel ->
-      String.starts_with?(target, towel) and possible?(String.trim_leading(target, towel), towels, max_towel_index)
-    end)
+  def possible?(target, towels, cache) do
+    if has_key?(cache, target) do
+      get_from_cache(cache, target)
+    else
+      result =
+        towels
+        |> Enum.any?(fn towel ->
+          String.starts_with?(target, towel) and possible?(String.trim_leading(target, towel), towels, cache)
+        end)
+
+      put_in_cache(cache, target, result)
+      result
+    end
   end
 
-  defp possible_towels(towels, target, max_towel_index) do
-    0..max_towel_index
-    |> Enum.map(fn n -> String.slice(target, 0..n) end)
-    |> MapSet.new()
-    |> MapSet.intersection(towels)
+  def init_cache do
+    Agent.start(fn -> %{} end)
+  end
+
+  def has_key?(cache, key) do
+    Agent.get(cache, &Map.has_key?(&1, key))
+  end
+
+  def put_in_cache(cache, key, value) do
+    Agent.update(cache, &Map.put(&1, key, value))
+  end
+
+  def get_from_cache(cache, key) do
+    Agent.get(cache, &Map.get(&1, key))
   end
 
   def part_b(_lines) do

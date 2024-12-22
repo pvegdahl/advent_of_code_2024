@@ -35,15 +35,34 @@ defmodule AdventOfCode2024.Day19Test do
 
   describe "possible?" do
     setup do
-      %{towels: MapSet.new(["r", "wr", "b", "g", "bwu", "rb", "gb", "br"])}
+      {:ok, cache} = Day19.init_cache()
+      %{cache: cache, towels: MapSet.new(["r", "wr", "b", "g", "bwu", "rb", "gb", "br"])}
     end
 
-    test "yes!", %{towels: towels} do
-      assert Day19.possible?("bwurrg", towels, 6)
+    test "yes!", %{cache: cache, towels: towels} do
+      assert Day19.possible?("bwurrg", towels, cache)
     end
 
-    test "no!", %{towels: towels} do
-      refute Day19.possible?("bbrgwb", towels, 6)
+    test "no!", %{cache: cache, towels: towels} do
+      refute Day19.possible?("bbrgwb", towels, cache)
+    end
+  end
+
+  describe "caching" do
+    test "an empty cache does not have any keys" do
+      {:ok, cache} = Day19.init_cache()
+      refute Day19.has_key?(cache, :anything)
+    end
+
+    test "a cache has values that you put into it" do
+      {:ok, cache} = Day19.init_cache()
+      Day19.put_in_cache(cache, :key0, :value0)
+      Day19.put_in_cache(cache, :key1, :value1)
+      Day19.put_in_cache(cache, :key2, :value2)
+      assert Day19.has_key?(cache, :key0)
+      assert Day19.get_from_cache(cache, :key0) == :value0
+      assert Day19.get_from_cache(cache, :key1) == :value1
+      assert Day19.get_from_cache(cache, :key2) == :value2
     end
   end
 
