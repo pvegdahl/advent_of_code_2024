@@ -19,6 +19,26 @@ defmodule AdventOfCode2024.Day22Test do
     |> Enum.map(&String.trim/1)
   end
 
+  describe "one_iteration" do
+    test "The examples" do
+      [
+        123,
+        15_887_950,
+        16_495_136,
+        527_345,
+        704_524,
+        1_553_684,
+        12_683_156,
+        11_100_544,
+        12_249_484,
+        7_753_432,
+        5_908_254
+      ]
+      |> Enum.chunk_every(2, 1, :discard)
+      |> Enum.each(fn [a, b] -> assert Day22.one_iteration(a) == b end)
+    end
+  end
+
   @tag :skip
   test "Day22 part B example" do
     assert Day22.part_b(example_input()) == 42
