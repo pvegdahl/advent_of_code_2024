@@ -7,13 +7,9 @@ defmodule AdventOfCode2024.Day19 do
 
     {:ok, cache} = Cache.init()
 
-    result =
-      targets
-      |> Enum.filter(fn target -> possible?(target, towels, cache) end)
-      |> Enum.count()
-
-    Agent.stop(cache)
-    result
+    targets
+    |> Enum.filter(fn target -> possible?(target, towels, cache) end)
+    |> Enum.count()
   end
 
   def parse_input([towel_line, "" | rest]) do
@@ -42,8 +38,36 @@ defmodule AdventOfCode2024.Day19 do
     end
   end
 
-  def part_b(_lines) do
-    -1
+  def part_b(lines) do
+    {towels, targets} = parse_input(lines)
+
+    {:ok, cache} = Cache.init()
+
+    targets
+    |> Enum.map(fn target -> possibilities(target, towels, cache) end)
+    |> Enum.sum()
+  end
+
+  def possibilities("", _towels, _cache), do: 1
+
+  def possibilities(target, towels, cache) do
+    if Cache.has_key?(cache, target) do
+      Cache.get(cache, target)
+    else
+      result =
+        towels
+        |> Enum.map(fn towel ->
+          if String.starts_with?(target, towel) do
+            possibilities(String.replace_prefix(target, towel, ""), towels, cache)
+          else
+            0
+          end
+        end)
+        |> Enum.sum()
+
+      Cache.put(cache, target, result)
+      result
+    end
   end
 
   def a() do

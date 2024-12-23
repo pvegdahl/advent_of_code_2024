@@ -49,8 +49,34 @@ defmodule AdventOfCode2024.Day19Test do
     end
   end
 
-  @tag :skip
   test "Day19 part B example" do
     assert Day19.part_b(example_input()) == 16
+  end
+
+  describe "possibilities/3" do
+    setup do
+      {:ok, cache} = Cache.init()
+      %{cache: cache, towels: MapSet.new(["r", "wr", "b", "g", "bwu", "rb", "gb", "br"])}
+    end
+
+    test "zero", %{cache: cache, towels: towels} do
+      assert Day19.possibilities("bbrgwb", towels, cache) == 0
+    end
+
+    test "one", %{cache: cache, towels: towels} do
+      assert Day19.possibilities("bwurrg", towels, cache) == 1
+    end
+
+    test "two", %{cache: cache, towels: towels} do
+      assert Day19.possibilities("brgr", towels, cache) == 2
+    end
+
+    test "four", %{cache: cache, towels: towels} do
+      assert Day19.possibilities("gbbr", towels, cache) == 4
+    end
+
+    test "six", %{cache: cache, towels: towels} do
+      assert Day19.possibilities("rrbgbr", towels, cache) == 6
+    end
   end
 end
