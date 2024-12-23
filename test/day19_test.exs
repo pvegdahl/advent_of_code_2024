@@ -2,6 +2,7 @@ defmodule AdventOfCode2024.Day19Test do
   use ExUnit.Case, async: true
 
   alias AdventOfCode2024.Day19
+  alias AdventOfCode2024.Cache
 
   test "Day19 part A example" do
     assert Day19.part_a(example_input()) == 6
@@ -35,7 +36,7 @@ defmodule AdventOfCode2024.Day19Test do
 
   describe "possible?" do
     setup do
-      {:ok, cache} = Day19.init_cache()
+      {:ok, cache} = Cache.init()
       %{cache: cache, towels: MapSet.new(["r", "wr", "b", "g", "bwu", "rb", "gb", "br"])}
     end
 
@@ -48,26 +49,8 @@ defmodule AdventOfCode2024.Day19Test do
     end
   end
 
-  describe "caching" do
-    test "an empty cache does not have any keys" do
-      {:ok, cache} = Day19.init_cache()
-      refute Day19.has_key?(cache, :anything)
-    end
-
-    test "a cache has values that you put into it" do
-      {:ok, cache} = Day19.init_cache()
-      Day19.put_in_cache(cache, :key0, :value0)
-      Day19.put_in_cache(cache, :key1, :value1)
-      Day19.put_in_cache(cache, :key2, :value2)
-      assert Day19.has_key?(cache, :key0)
-      assert Day19.get_from_cache(cache, :key0) == :value0
-      assert Day19.get_from_cache(cache, :key1) == :value1
-      assert Day19.get_from_cache(cache, :key2) == :value2
-    end
-  end
-
   @tag :skip
   test "Day19 part B example" do
-    assert Day19.part_b(example_input()) == 42
+    assert Day19.part_b(example_input()) == 16
   end
 end

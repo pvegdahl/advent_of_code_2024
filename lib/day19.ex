@@ -1,10 +1,11 @@
 defmodule AdventOfCode2024.Day19 do
   alias AdventOfCode2024.Helpers
+  alias AdventOfCode2024.Cache
 
   def part_a(lines) do
     {towels, targets} = parse_input(lines)
 
-    {:ok, cache} = init_cache()
+    {:ok, cache} = Cache.init()
 
     result =
       targets
@@ -27,8 +28,8 @@ defmodule AdventOfCode2024.Day19 do
   def possible?("", _towels, _cache), do: true
 
   def possible?(target, towels, cache) do
-    if has_key?(cache, target) do
-      get_from_cache(cache, target)
+    if Cache.has_key?(cache, target) do
+      Cache.get(cache, target)
     else
       result =
         towels
@@ -36,25 +37,9 @@ defmodule AdventOfCode2024.Day19 do
           String.starts_with?(target, towel) and possible?(String.trim_leading(target, towel), towels, cache)
         end)
 
-      put_in_cache(cache, target, result)
+      Cache.put(cache, target, result)
       result
     end
-  end
-
-  def init_cache do
-    Agent.start(fn -> %{} end)
-  end
-
-  def has_key?(cache, key) do
-    Agent.get(cache, &Map.has_key?(&1, key))
-  end
-
-  def put_in_cache(cache, key, value) do
-    Agent.update(cache, &Map.put(&1, key, value))
-  end
-
-  def get_from_cache(cache, key) do
-    Agent.get(cache, &Map.get(&1, key))
   end
 
   def part_b(_lines) do
