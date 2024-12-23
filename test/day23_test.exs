@@ -72,8 +72,7 @@ defmodule AdventOfCode2024.Day23Test do
     end
   end
 
-  @tag :skip
   test "Day23 part B example" do
-    assert Day23.part_b(example_input()) == 42
+    assert Day23.part_b(example_input()) == "co,de,ka,ta"
   end
 end
