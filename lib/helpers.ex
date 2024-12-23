@@ -17,18 +17,20 @@ defmodule AdventOfCode2024.Helpers do
     |> Map.new()
   end
 
-  def parse_string_grid(lines) do
+  def parse_string_grid(lines, exclude \\ ["."]) do
     lines
     |> Enum.with_index()
-    |> Enum.flat_map(fn {line, y_index} -> parse_one_grid_line(line, y_index) end)
+    |> Enum.flat_map(fn {line, y_index} -> parse_one_grid_line(line, y_index, exclude) end)
     |> Enum.group_by(fn {char, _x, _y} -> char end, fn {_char, x, y} -> {x, y} end)
     |> Map.new(fn {key, value} -> {key, MapSet.new(value)} end)
   end
 
-  defp parse_one_grid_line(line, y_index) do
-    ~r/[^\.]/
-    |> Regex.scan(line, return: :index)
-    |> Enum.map(fn [{x_index, _}] -> {String.at(line, x_index), x_index, y_index} end)
+  defp parse_one_grid_line(line, y_index, exclude) do
+    line
+    |> String.graphemes()
+    |> Enum.with_index()
+    |> Enum.reject(fn {character, _x_index} -> character in exclude end)
+    |> Enum.map(fn {character, x_index} -> {character, x_index, y_index} end)
   end
 
   def grid_dimensions(lines) do
