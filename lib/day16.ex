@@ -14,7 +14,7 @@ defmodule AdventOfCode2024.Day16 do
       |> Graph.dijkstra(start, {target_x, target_y, :horizontal})
       |> path_cost()
 
-      min(horizontal_path_cost, vertical_path_cost)
+    min(horizontal_path_cost, vertical_path_cost)
   end
 
   def input_to_graph(lines) do
@@ -75,6 +75,12 @@ defmodule AdventOfCode2024.Day16 do
   defp path_cost([{_, _, _direction_a}, {_, _, _direction_b} = b | rest]), do: 1000 + path_cost([b | rest])
 
   def part_b(_lines) do
+    # %{start: start, target: {target_x, target_y}, graph: graph} = input_to_graph(lines)
+
+    # graphlib doesn't seem to work for finding all paths. Not sure why not. If I want to solve this, I may need to
+    # write my own graph search library.
+    # vertical_paths = Graph.get_paths(graph, start, {target_x, target_y, :vertical})
+    # horizontal_paths = Graph.get_paths(graph, start, {target_x, target_y, :horizontal})
     -1
   end
 

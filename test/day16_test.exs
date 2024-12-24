@@ -50,6 +50,6 @@ defmodule AdventOfCode2024.Day16Test do
 
   @tag :skip
   test "Day16 part B example" do
-    assert Day16.part_b(example_input()) == 42
+    assert Day16.part_b(example_input()) == 64
   end
 end
