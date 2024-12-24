@@ -62,6 +62,48 @@ defmodule AdventOfCode2024.Day24Test do
     |> Enum.map(&String.trim/1)
   end
 
+  describe "parse_input/1" do
+    test "turns the input into a map of rules" do
+      assert %{
+               "y03" => 1,
+               "y04" => 0,
+               "mjb" => {:xor, "ntg", "fgs"},
+               "tnw" => {:or, "y02", "x01"},
+               "tow" => {:and, "y02", "x01"}
+             } =
+               Day24.parse_input([
+                 "y03: 1",
+                 "y04: 0",
+                 "",
+                 "ntg XOR fgs -> mjb",
+                 "y02 OR x01 -> tnw",
+                 "y02 AND x01 -> tow"
+               ])
+    end
+  end
+
+  describe "solve_for/3" do
+    setup do
+      %{state: Day24.parse_input(example_input())}
+    end
+
+    test "simple initial state value", %{state: state} do
+      assert Day24.solve_for("x03", state) == 1
+    end
+
+    test "solve for an OR", %{state: state} do
+      assert Day24.solve_for("tnw", state) == 1
+    end
+
+    test "complicated recursive one", %{state: state} do
+      assert Day24.solve_for("z00", state) == 0
+    end
+
+    test "complicated recursive one with AND", %{state: state} do
+      assert Day24.solve_for("z10", state) == 1
+    end
+  end
+
   @tag :skip
   test "Day24 part B example" do
     assert Day24.part_b(example_input()) == 42
