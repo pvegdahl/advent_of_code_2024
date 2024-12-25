@@ -74,14 +74,76 @@ defmodule AdventOfCode2024.Day16 do
   defp path_cost([{_, _, direction}, {_, _, direction} = b | rest]), do: 1 + path_cost([b | rest])
   defp path_cost([{_, _, _direction_a}, {_, _, _direction_b} = b | rest]), do: 1000 + path_cost([b | rest])
 
-  def part_b(_lines) do
-    # %{start: start, target: {target_x, target_y}, graph: graph} = input_to_graph(lines)
+  def part_b(lines) do
+    %{start: start, target: target, graph: graph} = input_to_graph(lines)
 
-    # graphlib doesn't seem to work for finding all paths. Not sure why not. If I want to solve this, I may need to
-    # write my own graph search library.
-    # vertical_paths = Graph.get_paths(graph, start, {target_x, target_y, :vertical})
-    # horizontal_paths = Graph.get_paths(graph, start, {target_x, target_y, :horizontal})
-    -1
+    # graphlib doesn't seem to work for finding all paths. Not sure why not. I wrote my own search algo :-\
+    graph
+    |> dijkstra_all_nodes_of_best_paths(start, target)
+    |> Enum.count()
+  end
+
+  def dijkstra_all_nodes_of_best_paths(graph, start, {target_x, target_y}) do
+    to_visit =
+      graph
+      |> Graph.vertices()
+      |> Map.new(fn v -> {v, {:infinity, []}} end)
+      |> Map.put(start, {0, []})
+
+    graph_paths = dijkstra_all_recursive(graph, to_visit, %{})
+
+    {horizontal_cost, _parents} = Map.get(graph_paths, {target_x, target_y, :horizontal})
+    {vertical_cost, _parents} = Map.get(graph_paths, {target_x, target_y, :vertical})
+
+    cond do
+      horizontal_cost == vertical_cost ->
+        target_with_parents(graph_paths, {target_x, target_y, :vertical}) ++
+          target_with_parents(graph_paths, {target_x, target_y, :horizontal})
+
+      horizontal_cost < vertical_cost ->
+        target_with_parents(graph_paths, {target_x, target_y, :horizontal})
+
+      horizontal_cost > vertical_cost ->
+        target_with_parents(graph_paths, {target_x, target_y, :vertical})
+    end
+    |> Enum.map(fn {x, y, _direction} -> {x, y} end)
+    |> Enum.uniq()
+  end
+
+  defp dijkstra_all_recursive(_graph, to_visit, visited) when map_size(to_visit) == 0, do: visited
+
+  defp dijkstra_all_recursive(graph, to_visit, visited) do
+    {v1, {vi_cost, v1_parents}} = to_visit |> Enum.min_by(fn {_vertex, {cost, _parents}} -> cost end)
+
+    to_visit =
+      graph
+      |> Graph.edges(v1)
+      |> Enum.reduce(to_visit, fn %Graph.Edge{v1: va, v2: vb, weight: weight}, acc ->
+        [v2] = List.delete([va, vb], v1)
+
+        if Map.has_key?(acc, v2) do
+          {cost, v2_parents} = Map.get(acc, v2)
+          new_cost = vi_cost + weight
+
+          cond do
+            new_cost < cost -> Map.put(acc, v2, {new_cost, [v1]})
+            new_cost == cost -> Map.put(acc, v2, {new_cost, [v1 | v2_parents]})
+            new_cost > cost -> acc
+          end
+        else
+          acc
+        end
+      end)
+      |> Map.delete(v1)
+
+    visited = Map.put(visited, v1, {vi_cost, v1_parents})
+
+    dijkstra_all_recursive(graph, to_visit, visited)
+  end
+
+  defp target_with_parents(visited, target) do
+    {_cost, parents} = Map.get(visited, target)
+    [target | Enum.flat_map(parents, fn p -> target_with_parents(visited, p) end)]
   end
 
   def a() do

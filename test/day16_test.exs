@@ -48,7 +48,6 @@ defmodule AdventOfCode2024.Day16Test do
              Day16.input_to_graph(["####", "#.E#", "#S.#", "####"])
   end
 
-  @tag :skip
   test "Day16 part B example" do
     assert Day16.part_b(example_input()) == 64
   end
