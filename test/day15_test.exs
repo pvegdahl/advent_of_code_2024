@@ -94,8 +94,93 @@ defmodule AdventOfCode2024.Day15Test do
     end
   end
 
-  @tag :skip
   test "Day15 part B example" do
     assert Day15.part_b(example_input()) == 9021
+  end
+
+  describe "to_input_b/1" do
+    test "random input" do
+      assert Day15.to_input_b(%{
+               {0, 0} => "#",
+               {1, 1} => "#",
+               {0, 1} => "O",
+               {0, 2} => "O",
+               {2, 2} => "O",
+               {2, 1} => "@"
+             }) == %{
+               {0, 0} => "#",
+               {1, 0} => "#",
+               {2, 1} => "#",
+               {3, 1} => "#",
+               {0, 1} => "[",
+               {1, 1} => "]",
+               {0, 2} => "[",
+               {1, 2} => "]",
+               {4, 2} => "[",
+               {5, 2} => "]",
+               {4, 1} => "@"
+             }
+    end
+  end
+
+  describe "move/3 with double boxes" do
+    setup do
+      {grid, _directions, _staring_point} = Day15.parse_input(example_input())
+      %{grid: Day15.to_input_b(grid)}
+    end
+
+    test "A simple move into an empty space", %{grid: grid} do
+      assert {:ok, updated_grid} = Day15.move(grid, {8, 4}, "^")
+
+      refute Map.has_key?(updated_grid, {8, 4})
+      assert Map.get(updated_grid, {8, 3}) == "@"
+    end
+
+    test "Moving into a wall goes nowhere", %{grid: grid} do
+      assert :error == Day15.move(grid, {3, 5}, ">")
+    end
+
+    test "Push a box left into an empty space", %{grid: grid} do
+      assert {:ok, updated_grid} = Day15.move(grid, {8, 4}, "<")
+
+      refute Map.has_key?(updated_grid, {8, 4})
+      assert Map.get(updated_grid, {7, 4}) == "@"
+      assert Map.get(updated_grid, {6, 4}) == "]"
+      assert Map.get(updated_grid, {5, 4}) == "["
+    end
+
+    test "Push two boxes right into an empty space", %{grid: grid} do
+      assert {:ok, updated_grid} =
+               grid
+               |> Map.put({3, 3}, "@")
+               |> Day15.move({3, 3}, ">")
+
+      refute Map.has_key?(updated_grid, {3, 3})
+      assert Map.get(updated_grid, {4, 3}) == "@"
+      assert Map.get(updated_grid, {5, 3}) == "["
+      assert Map.get(updated_grid, {6, 3}) == "]"
+      assert Map.get(updated_grid, {7, 3}) == "["
+      assert Map.get(updated_grid, {8, 3}) == "]"
+    end
+
+    test "Push a box up", %{grid: grid} do
+      assert {:ok, updated_grid} =
+               grid
+               |> Map.put({4, 4}, "@")
+               |> Day15.move({4, 4}, "^")
+
+      refute Map.has_key?(updated_grid, {4, 4})
+      refute Map.has_key?(updated_grid, {5, 3})
+      assert Map.get(updated_grid, {4, 3}) == "@"
+      assert Map.get(updated_grid, {4, 2}) == "["
+      assert Map.get(updated_grid, {5, 2}) == "]"
+    end
+
+    test "Cannot push boxes through the wall", %{grid: grid} do
+      assert :error ==
+               grid
+               |> Map.put({6, 2}, "@")
+               |> Day15.move({6, 2}, "^")
+    end
   end
 end
