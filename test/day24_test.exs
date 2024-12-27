@@ -104,6 +104,38 @@ defmodule AdventOfCode2024.Day24Test do
     end
   end
 
+  describe "subgates/2 or new_subgates/1" do
+    setup do
+      %{
+        state: %{
+          "z00" => {:xor, "x00", "y00"},
+          "x00" => 1,
+          "y00" => 0,
+          "x01" => 0,
+          "y01" => 1,
+          "abc" => {:and, "x00", "y00"},
+          "efg" => {:xor, "x01", "y01"},
+          "z01" => {:xor, "abc", "efg"}
+        }
+      }
+    end
+
+    test "z00", %{state: state} do
+      assert Day24.subgates(state, "z00") == MapSet.new(["x00", "y00"])
+    end
+
+    test "z01", %{state: state} do
+      assert Day24.subgates(state, "z01") == MapSet.new(["x00", "y00", "x01", "y01", "abc", "efg"])
+    end
+
+    test "new_subgates/1", %{state: state} do
+      assert Day24.new_subgates(state) == %{
+               "z00" => MapSet.new(["x00", "y00"]),
+               "z01" => MapSet.new(["x01", "y01", "abc", "efg"])
+             }
+    end
+  end
+
   @tag :skip
   test "Day24 part B example" do
     assert Day24.part_b(example_input()) == 42
